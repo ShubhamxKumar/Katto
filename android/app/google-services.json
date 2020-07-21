@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "358681675109",
+    "firebase_url": "https://katto-49dd4.firebaseio.com",
+    "project_id": "katto-49dd4",
+    "storage_bucket": "katto-49dd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358681675109:android:6efed13f597ddee7fccd8c",
+        "android_client_info": {
+          "package_name": "com.example.katto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "358681675109-9vd6mcqa56rvi7ts6g8rkrbb7g9u4jjn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCu4bQQwu8plrmHtqjdbBjXqSEU7ATGPEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "358681675109-9vd6mcqa56rvi7ts6g8rkrbb7g9u4jjn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
