@@ -43,9 +43,12 @@ class _MyApp2State extends State<MyApp2> {
     ];
     return MaterialApp(
       home: Scaffold(
-        bottomNavigationBar: BtmNavigationBar(
-          onTap: _selectedScreen,
-          selectedScreenIndex: _selectedScreenIndex,
+        bottomNavigationBar: SizedBox(
+          height: 65,
+          child: BtmNavigationBar(
+            onTap: _selectedScreen,
+            selectedScreenIndex: _selectedScreenIndex,
+          ),
         ),
         body: _screens[_selectedScreenIndex],
       ),

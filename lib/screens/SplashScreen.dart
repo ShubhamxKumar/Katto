@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:katto/globalData.dart';
 import 'package:katto/main.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    getUserInfo();
     navigateToHome();
     super.initState();
   }

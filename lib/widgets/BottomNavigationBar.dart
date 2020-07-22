@@ -41,9 +41,13 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
           backgroundColor: Color(0xff2F2F2F),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add),
+          icon: Icon(
+            Icons.add_box,
+            size: 35,
+            color: Color(0xffDDA00A),
+          ),
           title: Text(''),
-          backgroundColor: Color(0xff2F2F2F),
+          backgroundColor: Color(0xff2f2f2f),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications),

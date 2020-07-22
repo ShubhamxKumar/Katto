@@ -1,5 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:katto/globalData.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:katto/screens/HomeScreen.dart';
+import 'package:katto/screens/SettingScreen.dart';
+import 'package:katto/widgets/BottomNavigationBar.dart';
+import 'package:katto/widgets/LoggedInProfile.dart';
+import 'package:katto/widgets/Login.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -8,12 +16,53 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
-  bool _isLoggedin = false;
-  _login() async {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isLoading = false;
+  Future<void> _login() async {
     try {
-      await _googleSignIn.signIn();
       setState(() {
-        _isLoggedin = true;
+        _isLoading = true;
+      });
+      GoogleSignInAccount account = await _googleSignIn.signIn();
+      AuthResult _authResult = await _auth
+          .signInWithCredential(
+        GoogleAuthProvider.getCredential(
+            idToken: (await account.authentication).idToken,
+            accessToken: (await account.authentication).accessToken),
+      )
+          .then((user) async {
+        try {
+          await Firestore.instance
+              .collection('Users')
+              .document(user.user.uid)
+              .get()
+              .then((doc) {
+            if (!doc.exists) {
+              doc.reference.setData({
+                'fullname': user.user.displayName,
+                'username':
+                    user.user.email.substring(0, user.user.email.indexOf('@')),
+                'userId': user.user.uid,
+                'profilePic': null,
+                'useremail': user.user.email,
+                'liked' : 0,
+                'followers' : 0,
+                'following' : 0,
+                'videos' : [],
+              });
+            }
+          });
+        } catch (err) {
+          print(err.message);
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }).then((user) async {
+        await getUserInfo();
+      });
+      setState(() {
+        _isLoading = false;
       });
     } catch (err) {
       showDialog(
@@ -26,6 +75,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+                  setState(() {
+                    _isLoading = false;
+                  });
                 },
                 child: Text('OK'),
               )
@@ -38,98 +90,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoggedin
+    return _isLoading
         ? SafeArea(
             child: Scaffold(
-              backgroundColor: Color(0xff2F2F2F),
-              body: Column(
-                children: [
-                  Text(_googleSignIn.currentUser.displayName),
-                  Text(_googleSignIn.currentUser.email),
-                  Text(_googleSignIn.currentUser.photoUrl),
-                  Text(_googleSignIn.currentUser.id),
-                  RaisedButton(
-                    onPressed: () async {
-                      try {
-                        await _googleSignIn.signOut();
-                        setState(() {
-                          _isLoggedin = false;
-                        });
-                      } catch (err) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Error'),
-                              content: Text(err.message),
-                              actions: <Widget>[
-                                FlatButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('OK'),
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
-                    child: Text(
-                      'Logout',
-                      style: TextStyle(fontFamily: 'secondary'),
-                    ),
-                  )
-                ],
+              backgroundColor: Color(0xff2f2f2f),
+              body: Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Color(0xffDDA00A),
+                  valueColor: new AlwaysStoppedAnimation<Color>(
+                    Color(0xff2f2f2f),
+                  ),
+                  strokeWidth: 5,
+                ),
               ),
             ),
           )
-        : SafeArea(
-            child: Scaffold(
-              backgroundColor: Color(0xff2F2F2F),
-              body: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: InkWell(
-                      onTap: _login,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width * 0.5 + 20,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black,
-                                offset: Offset(1, 3),
-                                blurRadius: 2.5,
-                                spreadRadius: .1),
-                          ],
+        : StreamBuilder(
+            builder: (context, sdata) {
+              if (sdata.connectionState == ConnectionState.waiting) {
+                return SafeArea(
+                  child: Scaffold(
+                    backgroundColor: Color(0xff2f2f2f),
+                    body: Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Color(0xffDDA00A),
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                          Color(0xff2f2f2f),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              child: Image.asset('assets/google.png'),
-                            ),
-                            Text(
-                              'Sign in with Google',
-                              style: TextStyle(
-                                fontFamily: 'secondary',
-                              ),
-                            )
-                          ],
-                        ),
+                        strokeWidth: 5,
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
+                );
+              }
+              if (sdata.hasData) {
+                return LoggedInProfile();
+              } else {
+                return Login(
+                  login: _login,
+                );
+              }
+            },
+            stream: FirebaseAuth.instance.onAuthStateChanged,
           );
   }
 }
