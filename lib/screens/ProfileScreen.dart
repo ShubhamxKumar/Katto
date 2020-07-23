@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           });
         } catch (err) {
-          print(err.message);
+          print(err.message );
           setState(() {
             _isLoading = false;
           });

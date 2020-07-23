@@ -14,7 +14,7 @@ var userInfo = {
   'numberofvideos': 0,
 };
 
-Future<void> getUserInfo() {
+Future<bool> getUserInfo() {
   if (FirebaseAuth.instance.currentUser != null) {
     FirebaseAuth.instance.currentUser().then((user) async {
       try {
@@ -26,7 +26,7 @@ Future<void> getUserInfo() {
           if (doc.exists) {
             userInfo['fullname'] = doc.data['fullname'];
             userInfo['username'] = doc.data['username'];
-            userInfo['usernmail'] = doc.data['useremail'];
+            userInfo['useremail'] = doc.data['useremail'];
             userInfo['userId'] = doc.data['userId'];
             userInfo['profilePic'] = doc.data['profilePic'];
             userInfo['liked'] = doc.data['liked'];
@@ -38,9 +38,11 @@ Future<void> getUserInfo() {
         });
       } catch (err) {
         print(err.message);
+        return false;
       }
     }).then((user) {
       print(userInfo);
+      return true;
     });
   }
 }

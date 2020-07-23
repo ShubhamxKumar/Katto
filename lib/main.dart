@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:katto/screens/ExploreScreen.dart';
 import 'package:katto/screens/HomeScreen.dart';
 import 'package:katto/screens/ProfileScreen.dart';
+import 'package:katto/screens/SearchResults.dart';
 import 'package:katto/screens/SplashScreen.dart';
 import 'package:katto/widgets/BottomNavigationBar.dart';
 
@@ -36,7 +38,7 @@ class _MyApp2State extends State<MyApp2> {
   Widget build(BuildContext context) {
     final List<Widget> _screens = [
       HomeScreen(),
-      HomeScreen(),
+      ExploreScreen(),
       HomeScreen(),
       HomeScreen(),
       ProfileScreen(),

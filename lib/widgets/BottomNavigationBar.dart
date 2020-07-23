@@ -20,24 +20,12 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          title: Text(
-            'Home',
-            style: TextStyle(
-              fontFamily: 'secondary',
-              fontSize: 11,
-            ),
-          ),
+          title: SizedBox.shrink(),
           backgroundColor: Color(0xff2F2F2F),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.search),
-          title: Text(
-            'Explore',
-            style: TextStyle(
-              fontFamily: 'secondary',
-              fontSize: 11,
-            ),
-          ),
+          title: SizedBox.shrink(),
           backgroundColor: Color(0xff2F2F2F),
         ),
         BottomNavigationBarItem(
@@ -46,29 +34,17 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
             size: 35,
             color: Color(0xffDDA00A),
           ),
-          title: Text(''),
+          title: SizedBox.shrink(),
           backgroundColor: Color(0xff2f2f2f),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications),
-          title: Text(
-            'Notification',
-            style: TextStyle(
-              fontFamily: 'secondary',
-              fontSize: 11,
-            ),
-          ),
+          title: SizedBox.shrink(),
           backgroundColor: Color(0xff2F2F2F),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
-          title: Text(
-            'Profile',
-            style: TextStyle(
-              fontFamily: 'secondary',
-              fontSize: 11,
-            ),
-          ),
+          title: SizedBox.shrink(),
           backgroundColor: Color(0xff2F2F2F),
         ),
       ],
